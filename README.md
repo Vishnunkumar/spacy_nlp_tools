@@ -21,6 +21,9 @@ entities = nlp_tool.get_entities()
 #get summary
 summary = nlp_tool.get_summary(lines=5)
 
+#get_keywords
+keywords = nlp_tool.get_keywords(no_keywords=15)
+
 ```
 
 - Please note: Working on adding some more general pipelines, will be updated as soon as it is done.
