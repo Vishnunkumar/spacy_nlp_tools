@@ -1,15 +1,9 @@
 import spacy
 from sklearn import metrics
 nlp = spacy.load('en_core_web_sm')
+stop_words = list(nlp.Defaults.stop_words)
 
 class SimpleNlp:
-    
-    """
-    Module for tools that are widely used for NLP 
-    
-    Arguements:
-     text: input text
-    """
     
     def __init__(self, text):
         self.text = text
@@ -20,7 +14,7 @@ class SimpleNlp:
         entities = []
         for ent in doc.ents:
             json_ent = {}
-            json_ent['text'] = ent.text
+            json_ent['word'] = ent.text
             json_ent['label'] = ent.label_
 
             entities.append(json_ent)
@@ -49,3 +43,23 @@ class SimpleNlp:
         summary = ('.').join(summary)
         
         return summary
+    
+    def get_keywords(self, no_keywords):
+        
+        doc = nlp(self.text)
+        
+        list_text = []
+        for t in doc:
+            if t.text not in stop_words:
+                json_dict = {}
+                sim = metrics.pairwise.cosine_similarity(t.vector.reshape(1, -1), doc.vector.reshape(1, -1))
+                if len(t.text) > 1:
+                    json_dict['word'] = t.text.lower()
+                    json_dict['score'] = sim[0][0]
+                    list_text.append(json_dict)
+
+        newlist = list(sorted(list_text, key=lambda k: k['score'], reverse=True)) 
+        distinct_cur = [dict(y) for y in set(tuple(x.items()) for x in newlist)] 
+        result = list({i['word']:i for i in reversed(distinct_cur)}.values())
+        
+        return result[0:no_keywords]
