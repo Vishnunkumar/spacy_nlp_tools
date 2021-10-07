@@ -5,7 +5,9 @@ nlp = spacy.load('en_core_web_sm')
 stop_words = list(nlp.Defaults.stop_words)
 
 class SimpleNlp:
-    
+    """
+    Class for simple NLP tool
+    """
     def __init__(self, text):
         self.text = text
     
