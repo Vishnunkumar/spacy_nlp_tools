@@ -1,5 +1,6 @@
 import spacy
 from sklearn import metrics
+## install en_core_web_sm before installation
 nlp = spacy.load('en_core_web_sm')
 stop_words = list(nlp.Defaults.stop_words)
 
